@@ -1,0 +1,8 @@
+//
+// Created by 13662 on 19/06/2025.
+//
+
+#ifndef ICOMPONENTARRAY_H
+#define ICOMPONENTARRAY_H
+
+#endif //ICOMPONENTARRAY_H
