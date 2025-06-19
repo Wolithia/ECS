@@ -9,12 +9,7 @@
 
 namespace ECS
 {
-	template<typename T>
-	struct Component
-	{
-		using ComponentType = typename T;
-		constexpr ComponentType MAX_COMPONENTS = std::numeric_limits<ComponentType>::max();
-		ComponentType ID;
-	};
+using Component = std::uint8_t;
+constexpr Component MAX_COMPONENTS = std::numeric_limits<Component>::max();
 }
 #endif //COMPONENTS_H

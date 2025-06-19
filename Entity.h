@@ -11,24 +11,16 @@
 
 namespace ECS
 {
-	template<typename T=uint32_t>
-	struct Entity
-	{
-		using EntityIDType = typename T;
-		constexpr EntityIDType MAX_ENTITIES = std::numeric_limits<EntityIDType>::max();
-		EntityIDType ID;
+using Entity = std::uint32_t;
+constexpr Entity MAX_ENTITIES = std::numeric_limits<Entity>::max();
 
-		explicit Entity(T id) : ID(id) {}
-	};
-
-
-	// Test components
-	struct Transform
-	{
-		std::array<float, 3> position;
-		std::array<float, 3> rotation;
-		std::array<float, 3> scale;
-	};
+// Test components
+struct Transform
+{
+	std::array<float, 3> position;
+	std::array<float, 3> rotation;
+	std::array<float, 3> scale;
+};
 
 }
 

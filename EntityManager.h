@@ -6,68 +6,62 @@
 #define ENTITYMANAGER_H
 #include <queue>
 #include <bitset>
+#include <cassert>
 
 #include "Components.h"
 #include "Entity.h"
 
 namespace ECS
 {
-#define ASSERTMSG(cond, msg) assert((msg, cond));
+#define ASSERTMSG(cond, msg) assert(((msg), cond));
 
-	template<typename E, typename C>
-	class EntityManager
+class EntityManager
+{
+	using Signature = std::bitset<MAX_COMPONENTS>;
+	public:
+	EntityManager()
 	{
-		using Signature = std::bitset<Component<C>::MAX_COMPONENTS>;
-		using Entity_t = Entity<E>;
-		using Component_t = Component<C>;
-
-		constexpr static E MaxEntity_v = Entity_t::MAX_ENTITY;
-		constexpr static C MaxComponent_v = Component<C>::MAX_COMPONENTS;
-
-		public:
-		EntityManager()
+		for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
 		{
-			for (E entity = 0; entity < MaxEntity_v; ++entity)
-			{
-				mAvailableEntities_.emplace(entity);
-			}
-		}
-		Entity_t CreateEntity()
-		{
-			ASSERTMSG(mLivingEntityCount_ < MaxComponent_v, "Too many Entities exist")
-
-			Entity_t entity = mAvailableEntities_.front();
-			mAvailableEntities_.pop();
-			++mLivingEntityCount_;
-
-			return entity;
-		}
-
-		void DestroyEntity(Entity_t entity)
-		{
-			ASSERTMSG(entity.ID < MaxEntity_v, "Entity ID out of range")
-
-			mSignatures_[entity.ID].reset();
-
 			mAvailableEntities_.push(entity);
-			--mLivingEntityCount_;
 		}
+	}
+	Entity CreateEntity()
+	{
+		ASSERTMSG(mLivingEntityCount_ < MAX_ENTITIES, "Too many Entities exist")
 
-		void SetSignature(Entity_t entity, Signature signature)
-		{
-			ASSERTMSG(entity.ID < MaxEntity_v, "Entity ID out of range")
-			mSignatures_[entity.ID] = signature;
-		}
+		Entity entity = mAvailableEntities_.front();
+		mAvailableEntities_.pop();
+		++mLivingEntityCount_;
+
+		return entity;
+	}
+
+	void DestroyEntity(Entity entity)
+	{
+		ASSERTMSG(entity < MAX_ENTITIES, "Entity ID out of range")
+
+		mSignatures_[entity].reset();
+
+		mAvailableEntities_.push(entity);
+		--mLivingEntityCount_;
+	}
+
+	void SetSignature(Entity entity, Signature signature)
+	{
+		ASSERTMSG(entity.ID < MaxEntity_v, "Entity ID out of range")
+		mSignatures_[entity] = signature;
+	}
 
 
-		private:
-		// Available Entity IDs, can support thread security in the future
-		std::queue<Entity_t> mAvailableEntities_{};
+	private:
+	// Available Entity IDs, can support thread security in the future
+	std::queue<Entity> mAvailableEntities_{};
 
-		// Signature Map Entity.ID - Component ID bit map
-		std::array<Signature, MaxEntity_v> mSignatures_{};
+	// Signature Map Entity.ID - Component ID bit map
+	std::array<Signature, MAX_ENTITIES> mSignatures_{};
 
-		E mLivingEntityCount_ {};
-	};
+	Entity mLivingEntityCount_ {};
+};
 }
 #endif //ENTITYMANAGER_H

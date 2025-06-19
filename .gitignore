@@ -1,0 +1,45 @@
+# === CLion / IntelliJ ===
+.idea/
+*.iml
+*.iws
+cmake-build-*/
+
+# === CMake build folders ===
+build/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+
+# === Compiled binaries and object files ===
+*.out
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.a
+*.lib
+
+# === Crash logs / debugging ===
+core.*
+vgcore.*
+*.stackdump
+
+# === OS-specific files ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Backup files ===
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# === VS Code (if used occasionally) ===
+.vscode/
