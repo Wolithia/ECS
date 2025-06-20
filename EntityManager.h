@@ -49,7 +49,7 @@ class EntityManager
 
 	void SetSignature(Entity entity, Signature signature)
 	{
-		ASSERTMSG(entity.ID < MaxEntity_v, "Entity ID out of range")
+		ASSERTMSG(entity < MAX_ENTITIES, "Entity ID out of range")
 		mSignatures_[entity] = signature;
 	}
 

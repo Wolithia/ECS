@@ -5,6 +5,7 @@
 #ifndef ICOMPONENTARRAY_H
 #define ICOMPONENTARRAY_H
 #include <array>
+#include <cstddef>
 #include <unordered_map>
 
 #include "Components.h"
@@ -23,8 +24,8 @@ public:
 template<typename T, typename Comp>
 class ComponentArray : public IComponentArray
 {
-	using E2CMapType = typename std::unordered_map<Entity, Component>;
-	using C2EMapType = typename std::unordered_map<Component, Entity>;
+	using E2CMapType = typename std::unordered_map<Entity, std::size_t>;
+	using C2EMapType = typename std::unordered_map<std::size_t, Entity>;
 
 public:
 	void InsertEntity(Entity entity, Comp&& component)
@@ -70,8 +71,8 @@ private:
 	std::array<Comp, MAX_COMPONENTS> componentArray_ {};
 
 	//TODO: Sparse Set
-	std::unordered_map<Entity, Component> entityToComponentMap_ {};
-	std::unordered_map<Component, Entity> componentToEntityMap_ {};
+	std::unordered_map<Entity, std::size_t> entityToComponentMap_ {};
+	std::unordered_map<std::size_t, Entity> componentToEntityMap_ {};
 	std::uint8_t currentSize_ {0};
 };
 }

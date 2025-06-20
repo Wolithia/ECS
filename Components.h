@@ -9,7 +9,7 @@
 
 namespace ECS
 {
-using Component = std::uint8_t;
-constexpr Component MAX_COMPONENTS = std::numeric_limits<Component>::max();
+using ComponentType = std::uint8_t;
+constexpr ComponentType MAX_COMPONENTS = 32;
 }
 #endif //COMPONENTS_H
