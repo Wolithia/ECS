@@ -21,16 +21,16 @@ public:
 	virtual void EntityDestroy(Entity entity) = 0;
 };
 
-template<typename T, typename Comp>
+template<typename T, typename... Args>
 class ComponentArray : public IComponentArray
 {
 	using E2CMapType = typename std::unordered_map<Entity, std::size_t>;
 	using C2EMapType = typename std::unordered_map<std::size_t, Entity>;
 
 public:
-	void InsertEntity(Entity entity, Comp&& component)
+	void InsertEntity(Entity entity, Args... args)
 	{
-		componentArray_[currentSize_] = std::move(component);
+		componentArray_[currentSize_] = T(std::forward<Args>(args)...);
 		componentToEntityMap_[currentSize_] = entity;
 		entityToComponentMap_[entity] = currentSize_;
 		++currentSize_;

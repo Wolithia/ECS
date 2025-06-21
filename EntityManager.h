@@ -23,16 +23,16 @@ class EntityManager
 	{
 		for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
 		{
-			mAvailableEntities_.push(entity);
+			availableEntities_.push(entity);
 		}
 	}
 	Entity CreateEntity()
 	{
-		ASSERTMSG(mLivingEntityCount_ < MAX_ENTITIES, "Too many Entities exist")
+		ASSERTMSG(livingEntityCount_ < MAX_ENTITIES, "Too many Entities exist")
 
-		Entity entity = mAvailableEntities_.front();
-		mAvailableEntities_.pop();
-		++mLivingEntityCount_;
+		Entity entity = availableEntities_.front();
+		availableEntities_.pop();
+		++livingEntityCount_;
 
 		return entity;
 	}
@@ -41,27 +41,27 @@ class EntityManager
 	{
 		ASSERTMSG(entity < MAX_ENTITIES, "Entity ID out of range")
 
-		mSignatures_[entity].reset();
+		signatures_[entity].reset();
 
-		mAvailableEntities_.push(entity);
-		--mLivingEntityCount_;
+		availableEntities_.push(entity);
+		--livingEntityCount_;
 	}
 
 	void SetSignature(Entity entity, Signature signature)
 	{
 		ASSERTMSG(entity < MAX_ENTITIES, "Entity ID out of range")
-		mSignatures_[entity] = signature;
+		signatures_[entity] = signature;
 	}
 
 
 	private:
 	// Available Entity IDs, can support thread security in the future
-	std::queue<Entity> mAvailableEntities_{};
+	std::queue<Entity> availableEntities_{};
 
 	// Signature Map Entity.ID - Component ID bit map
-	std::array<Signature, MAX_ENTITIES> mSignatures_{};
+	std::array<Signature, MAX_ENTITIES> signatures_{};
 
-	Entity mLivingEntityCount_ {};
+	Entity livingEntityCount_ {};
 };
 }
 #endif //ENTITYMANAGER_H

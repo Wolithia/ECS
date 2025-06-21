@@ -8,4 +8,6 @@ add_executable(ECS main.cpp
         Components.h
         EntityManager.h
         IComponentArray.h
-        ComponentManager.h)
+        ComponentManager.h
+        System.h
+)

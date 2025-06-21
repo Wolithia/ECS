@@ -7,19 +7,18 @@
 #include <array>
 #include <cstdint>
 #include <limits>
-#include <bitset>
+#include <type_traits>
+#include <utility>
 
 namespace ECS
 {
-using Entity = std::uint32_t;
-constexpr Entity MAX_ENTITIES = std::numeric_limits<Entity>::max();
 
-// Test components
-struct Transform
+template <typename T=std::uint32_t>
+struct Entity
 {
-	std::array<float, 3> position;
-	std::array<float, 3> rotation;
-	std::array<float, 3> scale;
+	static_assert(std::is_integral<T>::value, "Entity type must be integral");
+	T ID;
+	static constexpr T INVALID_ID = std::numeric_limits<T>::max();
 };
 
 }
