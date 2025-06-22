@@ -1,0 +1,16 @@
+name: CI Test SparseSet on Windows
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: windows-2022
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🛠 Build and run test
+        run:
+          cl /EHsc /std::c++20 /W4 test_sparse_set.cpp
+          test_sparse_set.exe
+
