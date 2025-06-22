@@ -1,4 +1,5 @@
 name: CI Test SparseSet on Windows
+
 on: [push, pull_request]
 
 jobs:
@@ -6,11 +7,18 @@ jobs:
     runs-on: windows-2022
 
     steps:
+      # Step 1: Checkout the code
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      - name: 🛠 Build and run test
-        run:
-          cl /EHsc /std::c++20 /W4 test_sparse_set.cpp
-          test_sparse_set.exe
+      # Step 2: Set up MSVC Build Tools
+      - name: 🛠 Set up MSVC Build Tools
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: 2019  # You can change to a different version like '2022' if needed
 
+      # Step 3: Build and run the test
+      - name: 🧪 Build and run test
+        run: |
+          cl /EHsc /std:c++20 /W4 test_sparse_set.cpp
+          test_sparse_set.exe
