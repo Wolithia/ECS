@@ -14,7 +14,7 @@ jobs:
       # Step 2: Install Visual Studio Build Tools (for MSVC tools)
       - name: 🛠 Install Visual Studio Build Tools
         run: |
-          choco install visualstudio2019buildtools --version 16.11.8.1 --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+          choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
 
       # Step 3: Set up the MSVC environment
       - name: 🧑‍💻 Set up MSVC environment
