@@ -12,15 +12,8 @@
 
 namespace ECS
 {
-
-template <typename T=std::uint32_t>
-struct Entity
-{
-	static_assert(std::is_integral<T>::value, "Entity type must be integral");
-	T ID;
-	static constexpr T INVALID_ID = std::numeric_limits<T>::max();
-};
-
+	using EntityID = std::uint32_t;
+	static constexpr EntityID MAX_ENTITY_SIZE = std::numeric_limits<EntityID>::max() - 1;
 }
 
 

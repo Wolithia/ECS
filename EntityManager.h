@@ -13,33 +13,32 @@
 
 namespace ECS
 {
-#define ASSERTMSG(cond, msg) assert(((msg), cond));
 
 class EntityManager
 {
-	using Signature = std::bitset<MAX_COMPONENTS>;
+	using Signature = std::bitset<COMPONENT_MAX_SIZE>;
 	public:
 	EntityManager()
 	{
-		for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+		for (EntityID entity = 0; entity < MAX_ENTITY_SIZE; ++entity)
 		{
 			availableEntities_.push(entity);
 		}
 	}
-	Entity CreateEntity()
+	EntityID CreateEntity()
 	{
-		ASSERTMSG(livingEntityCount_ < MAX_ENTITIES, "Too many Entities exist")
+		assert(livingEntityCount_ < MAX_ENTITY_SIZE && "Too many Entities exist");
 
-		Entity entity = availableEntities_.front();
+		EntityID entity = availableEntities_.front();
 		availableEntities_.pop();
 		++livingEntityCount_;
 
 		return entity;
 	}
 
-	void DestroyEntity(Entity entity)
+	void DestroyEntity(EntityID entity)
 	{
-		ASSERTMSG(entity < MAX_ENTITIES, "Entity ID out of range")
+		assert(entity < MAX_ENTITY_SIZE && "Entity ID out of range");
 
 		signatures_[entity].reset();
 
@@ -47,21 +46,21 @@ class EntityManager
 		--livingEntityCount_;
 	}
 
-	void SetSignature(Entity entity, Signature signature)
+	void SetSignature(EntityID entity, Signature signature)
 	{
-		ASSERTMSG(entity < MAX_ENTITIES, "Entity ID out of range")
+		assert(entity < MAX_ENTITY_SIZE && "Entity ID out of range");
 		signatures_[entity] = signature;
 	}
 
 
 	private:
 	// Available Entity IDs, can support thread security in the future
-	std::queue<Entity> availableEntities_{};
+	std::queue<EntityID> availableEntities_{};
 
 	// Signature Map Entity.ID - Component ID bit map
-	std::array<Signature, MAX_ENTITIES> signatures_{};
+	std::array<Signature, MAX_ENTITY_SIZE> signatures_{};
 
-	Entity livingEntityCount_ {};
+	EntityID livingEntityCount_ {0};
 };
 }
 #endif //ENTITYMANAGER_H

@@ -4,11 +4,12 @@
 
 #ifndef ICOMPONENTARRAY_H
 #define ICOMPONENTARRAY_H
-#include <array>
+#include <cassert>
+#include <vector>
 #include <cstddef>
 #include <unordered_map>
 
-#include "Components.h"
+#include "SparseSet.h"
 #include "Entity.h"
 
 namespace ECS
@@ -18,61 +19,54 @@ class IComponentArray
 {
 public:
 	virtual ~IComponentArray() = 0;
-	virtual void EntityDestroy(Entity entity) = 0;
+	virtual void EntityDestroy(EntityID entity) = 0;
 };
 
-template<typename T, typename... Args>
+template<typename Component>
 class ComponentArray : public IComponentArray
 {
-	using E2CMapType = typename std::unordered_map<Entity, std::size_t>;
-	using C2EMapType = typename std::unordered_map<std::size_t, Entity>;
-
 public:
-	void InsertEntity(Entity entity, Args... args)
+	ComponentArray()
 	{
-		componentArray_[currentSize_] = T(std::forward<Args>(args)...);
-		componentToEntityMap_[currentSize_] = entity;
-		entityToComponentMap_[entity] = currentSize_;
+		components_.reserve(256);
+	}
+
+	template <typename ... Args>
+	void InsertEntity(const EntityID entity_id, Args... args)
+	{
+		components_.emplace_back(std::forward<Args>(args)...);
+		indexMap_.Add(entity_id);
 		++currentSize_;
 	}
 
-	void EntityDestroy(Entity entity) override
+	void InsertEntity(const EntityID entity_id)
 	{
-		if (auto itr = entityToComponentMap_.find(entity); itr != entityToComponentMap_.end())
-		{
-			RemoveData(itr);
-		}
+		components_.emplace_back();
+		indexMap_.Add(entity_id);
+		++currentSize_;
 	}
 
-	T& GetData(Entity entity)
+	void EntityDestroy(EntityID entity_id) override
 	{
-		return componentArray_[entityToComponentMap_[entity]];
-	}
-
-private:
-	void RemoveData(E2CMapType::iterator itr)
-	{
-		Component attachedComponent = itr->second;
-		Component lastIndex = currentSize_ - 1;
-
-		// Swap the last component with the component to removed
-		componentArray_[attachedComponent] = componentArray_[lastIndex];
-
-		Entity entityOfTheLastComponent = componentToEntityMap_[lastIndex];
-		componentToEntityMap_[attachedComponent] = entityOfTheLastComponent;
-		entityToComponentMap_[entityOfTheLastComponent] = attachedComponent;
+		if (indexMap_.Has(entity_id))
+			indexMap_.Remove(entity_id);
+		else
+			assert(false && "Entity does not exist");
 
 		--currentSize_;
 	}
 
+	Component& GetData(EntityID entity_id)
+	{
+		ComponentID component_id = indexMap_.Find(entity_id);
+		return components_[component_id];
+	}
+
 private:
-
 	// Component Data Array
-	std::array<Comp, MAX_COMPONENTS> componentArray_ {};
+	std::vector<Component> components_ {};
 
-	//TODO: Sparse Set
-	std::unordered_map<Entity, std::size_t> entityToComponentMap_ {};
-	std::unordered_map<std::size_t, Entity> componentToEntityMap_ {};
+	SparseSet<std::uint32_t, std::uint8_t> indexMap_ {};
 	std::uint8_t currentSize_ {0};
 };
 }

@@ -10,4 +10,6 @@ add_executable(ECS main.cpp
         IComponentArray.h
         ComponentManager.h
         System.h
+        SparseSet.h
+        TestSparseSet.cpp
 )
