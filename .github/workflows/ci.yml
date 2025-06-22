@@ -11,13 +11,17 @@ jobs:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up MSVC Build Tools
-      - name: 🛠 Set up MSVC Build Tools
-        uses: microsoft/setup-msbuild@v1.0.2
-        with:
-          vs-version: 2019  # You can change to a different version like '2022' if needed
+      # Step 2: Install Visual Studio Build Tools (for MSVC tools)
+      - name: 🛠 Install Visual Studio Build Tools
+        run: |
+          choco install visualstudio2019buildtools --version 16.11.8.1 --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
 
-      # Step 3: Build and run the test
+      # Step 3: Set up the MSVC environment
+      - name: 🧑‍💻 Set up MSVC environment
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+      # Step 4: Build and run the test
       - name: 🧪 Build and run test
         run: |
           cl /EHsc /std:c++20 /W4 test_sparse_set.cpp
