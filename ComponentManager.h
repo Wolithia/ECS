@@ -27,7 +27,7 @@ public:
 	}
 
 	template <typename T>
-	ComponentType GetComponentType()
+	const char * GetComponentType()
 	{
 		return componentTypes_[typeid(T).name()];
 	}

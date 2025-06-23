@@ -8,7 +8,7 @@
 #include <bitset>
 #include <cassert>
 
-#include "Components.h"
+#include "Signature.h"
 #include "Entity.h"
 
 namespace ECS
@@ -16,7 +16,6 @@ namespace ECS
 
 class EntityManager
 {
-	using Signature = std::bitset<COMPONENT_MAX_SIZE>;
 	public:
 	EntityManager()
 	{
@@ -29,7 +28,7 @@ class EntityManager
 	{
 		assert(livingEntityCount_ < MAX_ENTITY_SIZE && "Too many Entities exist");
 
-		EntityID entity = availableEntities_.front();
+		const EntityID entity = availableEntities_.front();
 		availableEntities_.pop();
 		++livingEntityCount_;
 

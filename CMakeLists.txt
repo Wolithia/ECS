@@ -12,4 +12,7 @@ add_executable(ECS main.cpp
         System.h
         SparseSet.h
         TestSparseSet.cpp
+        SystemManager.h
+        Signature.h
+        Coordinator.h
 )
